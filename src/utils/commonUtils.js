@@ -1,4 +1,4 @@
-import config from "@/config";
+import config from "../config";
 
 export default {
 
@@ -8,6 +8,7 @@ export default {
 
     getApiBaseUrl() {
         const env = this.getProcessEnv() || 'default';
+        console.log(env);
         const target = config[env];
         return target.api.baseUrl;
     },

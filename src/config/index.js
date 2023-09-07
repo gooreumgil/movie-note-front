@@ -1,4 +1,4 @@
-import defaultConfig from "./defaults"
+import defaultConfig from "./default"
 import dev from "@/config/dev";
 
 export default {
