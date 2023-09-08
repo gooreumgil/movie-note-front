@@ -1,7 +1,7 @@
-import { createStore } from "vuex";
+import {createStore} from "vuex";
 import mutations from "@/store/mutations";
 
-export default createStore({
+const store = createStore({
     state: {
         userInfo: {
             email: null,
@@ -22,3 +22,6 @@ export default createStore({
     },
     mutations
 })
+
+
+export default store

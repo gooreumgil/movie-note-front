@@ -87,6 +87,36 @@ img {
 
 button {
   border: 0;
+  cursor: pointer;
+}
+
+/*
+=====================================
+CUSTOM
+=====================================
+*/
+
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.container-main {
+  box-sizing: border-box;
+  padding: 25px;
+  position: relative;
+  padding-top: 68px;
+}
+
+.header {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+input {
+  border: 1px solid #ddd;
 }
 
 </style>

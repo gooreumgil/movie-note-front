@@ -14,7 +14,6 @@ globalCookiesConfig({
 
 let app = createApp(App);
 
-app.provide('store', store)
 app.use(router)
 app.use(store)
 app.mount('#app');

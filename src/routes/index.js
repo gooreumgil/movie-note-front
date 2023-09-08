@@ -1,11 +1,11 @@
-import Vue from "vue"
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import Main from "@/views/Main.vue";
 import Login from "@/views/auth/Login.vue";
 import authApi from "@/api/authApi";
 import {useCookies} from "vue3-cookies";
-const {cookies} = useCookies();
 import store from "@/store";
+
+const {cookies} = useCookies();
 
 /**
  * 로그인 페이지 접근시 세션 검증이 되면 메인 페이지로 redirect
@@ -38,23 +38,24 @@ function authenticateBeforeLogin(to, from, next) {
 /**
  * 로그인이 필요한 페이지에 접근시에 세션검증
  */
-function redirectLoginPageIfTokenNotValid(to, from, next) {
-    const token = cookies.get("accessToken");
-    const thenFunc = function(response) {
+export function redirectLoginPageIfTokenNotValid(to, from, next) {
 
-        const {accessToken, email, nickname, imageUrl } = response.data;
+    const token = cookies.get("accessToken");
+    const thenFunc = function (response) {
+
+        const {accessToken, email, nickname, imageUrl} = response.data;
         if (accessToken) {
             cookies.set("accessToken", accessToken, '4d', '/');
         }
 
-        store.commit('SET_USER_EMAIL', email);
-        store.commit('SET_USER_NICKNAME', nickname);
-        store.commit('SET_USER_IMAGE_URL', imageUrl);
+        store.commit("SET_USER_EMAIL", email)
+        store.commit("SET_USER_NICKNAME", nickname)
+        store.commit("SET_USER_IMAGE_URL", imageUrl)
 
         next();
     }
 
-    const catchFunc = function(e) {
+    const catchFunc = function (e) {
         console.log(e);
         cookies.remove("accessToken");
         goLoginPage();
@@ -63,7 +64,7 @@ function redirectLoginPageIfTokenNotValid(to, from, next) {
 
     if (token) {
         authApi.tokenVerification()
-            .then(thenFunc.bind(this))
+            .then(thenFunc)
             .catch(catchFunc.bind(this))
     } else {
         goLoginPage();
