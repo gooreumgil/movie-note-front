@@ -17,7 +17,7 @@
 <script>
 import authApi from "@/api/authApi";
 import {useCookies} from "vue3-cookies";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
 
 export default {
@@ -25,7 +25,7 @@ export default {
   setup() {
     return {
       router: useRouter(),
-      cookies: useCookies().cookies
+      cookies: useCookies().cookies,
     }
   },
   data() {

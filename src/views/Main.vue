@@ -7,14 +7,15 @@
       </div>
 
       <div class="outer-form">
-        <form @submit.prevent="getMovieReviews">
+        <form @submit.prevent="setFindMovieReviewPath()">
           <div class="box-input">
-            <input v-model="query" type="text" placeholder="검색어를 입력하세요">
+            <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">
             <button type="submit">검색</button>
           </div>
         </form>
-        <div class="box-search-word" v-if="searchWord">
-          검색어: {{ searchWord }}
+        <div class="box-search-word" v-if="completedSearchWord">
+          <p>검색어: {{ completedSearchWord }}</p>
+          <button type="button">x</button>
         </div>
       </div>
 
@@ -42,20 +43,22 @@
 <script>
 import Header from "@/components/core/Header.vue";
 import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {computed} from "vue";
 import movieReviewApi from "@/api/movieReviewApi";
+import helloWorld from "@/components/HelloWorld.vue";
 
 export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
 
     const userEmail = computed(() => store.state.userInfo.email);
     const userNickname = computed(() => store.state.userInfo.nickname);
     const userImageUrl = computed(() => store.state.userInfo.imageUrl);
 
-    return {store, router, userEmail, userNickname, userImageUrl}
+    return {store, router, route, userEmail, userNickname, userImageUrl}
   },
   name: "Main",
   components: {
@@ -64,12 +67,15 @@ export default {
 
   data() {
     return {
-      query: null,
       searchWord: null,
+      completedSearchWord: null,
+      findCondition: {
+
+      },
       movieReviewPageInfo: {
         currentPage: 1,
         last: false,
-        size: 10,
+        size: 9,
         totalElements: 0,
         totalPages: 0
       },
@@ -78,15 +84,61 @@ export default {
   },
 
   async created() {
+    this.searchConditionReset();
+    await this.findConditionSetFromQuery();
     await this.getMovieReviews();
+  },
+
+  watch: {
+    $route: async function() {
+      this.searchConditionReset();
+      this.movieReviewList = [];
+
+      await this.findConditionSetFromQuery();
+      await this.getMovieReviews();
+    },
   },
 
   methods: {
 
+    async setFindMovieReviewPath(page) {
+
+      if (!page) {
+        page = 0;
+      }
+
+      const path = this.route.path;
+      const searchWord = this.searchWord ? this.searchWord : '';
+      const size = this.movieReviewPageInfo.size ? this.movieReviewPageInfo.size : '';
+
+      const newPath = `${path}?searchWord=${searchWord}&page=${page}&size=${size}`;
+      const fullPath = this.route.fullPath;
+
+      if (newPath === fullPath) {
+        window.location.reload();
+      } else {
+        await this.router.push(newPath);
+      }
+
+
+    },
+
     async getMovieReviews() {
-      const query = this.query;
+      const searchWord = this.searchWord;
+      const page = this.movieReviewPageInfo.currentPage;
+      const size = this.movieReviewPageInfo.size;
+
+      console.log('searchWord => ', searchWord)
+      console.log('page => ', page)
+      console.log('size => ', size)
+
+      const condition = {
+        searchWord,
+        page,
+        size
+      }
       try {
-        const { data } = await movieReviewApi.getMovieReviews(query);
+        const { data } = await movieReviewApi.getMovieReviews(condition);
         const pageInfo = data.pageInfo;
         if (pageInfo) {
           this.movieReviewPageInfo.currentPage = pageInfo.currentPage
@@ -101,8 +153,8 @@ export default {
           this.movieReviewList = list;
         }
 
-        if (query) {
-          this.searchWord = query;
+        if (searchWord) {
+          this.completedSearchWord = searchWord;
         }
 
       } catch (err) {
@@ -110,12 +162,28 @@ export default {
       }
     },
 
+    async findConditionSetFromQuery() {
+      const query = this.route.query;
+      const searchWord = query.searchWord;
+      const page = query.page;
+      const size = query.size;
+
+      this.searchWord = searchWord;
+      this.movieReviewPageInfo.currentPage = page;
+      this.movieReviewPageInfo.size = size;
+
+    },
+
+    searchConditionReset() {
+      this.searchWord = null;
+      this.completedSearchWord = null;
+    },
+
     getMovieReviewImg(movieReview) {
       return `url(${movieReview.uploadFileList[0].url})`;
     },
 
-  }
-
+  },
 }
 
 </script>
@@ -183,10 +251,25 @@ export default {
   }
 
   .box-search-word {
-    margin-top: 10px;
-    p {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
 
+    p {
+      font-size: 15px;
     }
+
+    button {
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 18px;
+      height: 18px;
+      margin-left: 5px;
+      line-height: 0;
+    }
+
   }
 
 }
