@@ -2,7 +2,7 @@
   <section class="container-main">
     <Header/>
     <div class="container-inner">
-      <div class="box-welcome">
+      <div class="box-welcome" v-if="userNickname">
         <h2><span class="nickname">{{ userNickname}}</span>님, 환영합니다!</h2>
       </div>
 
@@ -15,12 +15,12 @@
         </form>
         <div class="box-search-word" v-if="completedSearchWord">
           <p>검색어: {{ completedSearchWord }}</p>
-          <button type="button">x</button>
+          <button @click="resetPage" type="button">x</button>
         </div>
       </div>
 
       <ul class="movie-review-wrapper clearfix">
-        <li class="movie-review-list" v-for="(movieReview, movieReviewIdx) in movieReviewList" v-bind:key="movieReviewIdx">
+        <li @click="goMovieReviewDetail(movieReview.id)" class="movie-review-list" v-for="(movieReview, movieReviewIdx) in movieReviewList" v-bind:key="movieReviewIdx">
           <div class="movie-review-list-inner">
             <div class="box-img">
               <div class="box-bg" v-if="movieReview.uploadFileList.length > 0" v-bind:style="{backgroundImage: getMovieReviewImg(movieReview)}"></div>
@@ -67,6 +67,7 @@ export default {
 
   data() {
     return {
+      init: false,
       searchWord: null,
       completedSearchWord: null,
       findCondition: {
@@ -104,7 +105,7 @@ export default {
     async setFindMovieReviewPath(page) {
 
       if (!page) {
-        page = 0;
+        page = 1;
       }
 
       const path = this.route.path;
@@ -128,15 +129,12 @@ export default {
       const page = this.movieReviewPageInfo.currentPage;
       const size = this.movieReviewPageInfo.size;
 
-      console.log('searchWord => ', searchWord)
-      console.log('page => ', page)
-      console.log('size => ', size)
-
       const condition = {
         searchWord,
         page,
         size
       }
+
       try {
         const { data } = await movieReviewApi.getMovieReviews(condition);
         const pageInfo = data.pageInfo;
@@ -162,6 +160,10 @@ export default {
       }
     },
 
+    async goMovieReviewDetail(movieReviewId) {
+      await this.router.push(`/movie-reviews/${movieReviewId}`);
+    },
+
     async findConditionSetFromQuery() {
       const query = this.route.query;
       const searchWord = query.searchWord;
@@ -169,9 +171,19 @@ export default {
       const size = query.size;
 
       this.searchWord = searchWord;
-      this.movieReviewPageInfo.currentPage = page;
-      this.movieReviewPageInfo.size = size;
 
+      if (page != null && page > -1) {
+        this.movieReviewPageInfo.currentPage = page;
+      }
+
+      if (size) {
+        this.movieReviewPageInfo.size = size;
+      }
+
+    },
+
+    resetPage() {
+      this.router.push(this.route.path);
     },
 
     searchConditionReset() {

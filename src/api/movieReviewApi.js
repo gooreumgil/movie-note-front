@@ -14,4 +14,9 @@ export default {
         })
     },
 
+    getMovieReview(id) {
+        const url = `/api/v1/movie-reviews/${id}`;
+        return apiClient.get(url);
+    },
+
 }

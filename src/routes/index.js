@@ -4,6 +4,8 @@ import Login from "@/views/auth/Login.vue";
 import authApi from "@/api/authApi";
 import {useCookies} from "vue3-cookies";
 import store from "@/store";
+import SignUp from "@/views/auth/SignUp.vue";
+import movieReviewDetail from "@/views/moviereviews/MovieReviewDetail.vue";
 
 const {cookies} = useCookies();
 
@@ -71,6 +73,37 @@ export function redirectLoginPageIfTokenNotValid(to, from, next) {
     }
 }
 
+export function tokenValidIfTokenExists(to, from, next) {
+
+    const token = cookies.get("accessToken");
+    const thenFunc = function (response) {
+
+        const {accessToken, email, nickname, imageUrl} = response.data;
+        if (accessToken) {
+            cookies.set("accessToken", accessToken, '4d', '/');
+        }
+
+        store.commit("SET_USER_EMAIL", email)
+        store.commit("SET_USER_NICKNAME", nickname)
+        store.commit("SET_USER_IMAGE_URL", imageUrl)
+
+        next();
+    }
+
+    const catchFunc = function (e) {
+        console.log(e);
+        cookies.remove("accessToken");
+        goLoginPage();
+    }
+
+
+    if (token) {
+        authApi.tokenVerification()
+            .then(thenFunc)
+            .catch(catchFunc.bind(this))
+    }
+}
+
 /**
  * 로그인 페이지 접근시에 세션 검증 성공시
  */
@@ -108,12 +141,21 @@ export const router = createRouter({
         {
             path: "/",
             component: Main,
-            beforeEnter: redirectLoginPageIfTokenNotValid
+            beforeEnter: tokenValidIfTokenExists
         },
         {
             path: "/auth/login",
             component: Login,
             beforeEnter: authenticateBeforeLogin
+        },
+        {
+            path: "/auth/sign-up",
+            component: SignUp,
+            beforeEnter: authenticateBeforeLogin
+        },
+        {
+            path: "/movie-reviews/:id",
+            component: movieReviewDetail
         }
     ]
 })

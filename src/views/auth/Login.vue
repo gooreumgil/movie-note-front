@@ -8,7 +8,10 @@
       <form @submit.prevent="login()">
         <input v-model.trim="email" type="text" placeholder="이메일">
         <input v-model.trim="password" type="password" placeholder="패스워드를 입력하세요">
-        <button type="submit">Login</button>
+        <button type="submit">로그인</button>
+        <button type="button">
+          <router-link to="/auth/sign-up">회원가입</router-link>
+        </button>
       </form>
     </div>
   </section>
@@ -102,15 +105,30 @@ export default {
 
       }
 
-      button[type=submit] {
+      button {
         width: 100%;
         display: inline-block;
-        margin-top: 20px;
-        background-color: #42b983;
-        border-radius: 0px;
         padding: 15px;
-        color: #000;
         font-weight: 700;
+        border-radius: 0;
+
+        &[type=submit] {
+          margin-top: 20px;
+          background-color: #42b983;
+          color: #000;
+        }
+
+        &[type=button] {
+          margin-top: 5px;
+          background-color: #42b5b9;
+
+          a {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+
       }
     }
   }
