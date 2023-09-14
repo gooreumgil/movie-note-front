@@ -83,7 +83,7 @@ export default {
 
   .container-inner {
 
-    width: 1040px;
+    width: 820px;
     margin: 0 auto;
     text-align: left;
 
