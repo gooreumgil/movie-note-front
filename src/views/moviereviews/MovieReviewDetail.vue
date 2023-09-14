@@ -1,9 +1,22 @@
 <template>
-  <section class="container-main">
+  <section class="container-main" v-if="init">
     <Header />
     <div class="container-inner">
-      <div class="box-title">
-        <h2></h2>
+
+      <div class="box-review">
+        <div class="box-title">
+          <h2>{{ movieReview.title }}</h2>
+          <p>by {{ movieReview.member.nickname }}</p>
+        </div>
+        <div class="box-content">
+          <div class="box-image" v-if="isExistsMovieReviewImg(movieReview)">
+            <img v-bind:src="getMovieReviewImg(movieReview)" alt="">
+          </div>
+          <div class="box-text">
+            <pre>{{ movieReview.content }}</pre>
+          </div>
+        </div>
+<!--        {{ movieReview }}-->
       </div>
     </div>
   </section>
@@ -29,6 +42,7 @@ export default {
   },
   data() {
     return {
+      init: false,
       movieReview: null
     }
   },
@@ -37,14 +51,79 @@ export default {
       try {
         const { data } = await movieReviewApi.getMovieReview(id);
         this.movieReview = data;
+        this.init = true;
       } catch (err) {
         console.log(err);
       }
+    },
+
+    getMovieReviewImg(movieReview) {
+      return movieReview.uploadFileList[0].url;
+    },
+
+    isExistsMovieReviewImg(movieReview) {
+      return movieReview.uploadFileList.length > 0;
     },
   }
 }
 </script>
 
 <style scoped lang="scss">
+
+.container-main {
+
+
+  .box-review-img {
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .container-inner {
+
+    width: 1040px;
+    margin: 0 auto;
+    text-align: left;
+
+    .box-review {
+      box-sizing: border-box;
+      padding: 10px;
+
+      .box-title {
+        margin-top: 40px;
+
+        h2 {
+          font-size: 30px;
+          font-weight: 400;
+          color: #000;
+        }
+
+        p {
+          margin-top: 10px;
+        }
+      }
+
+      .box-image {
+        img {
+          max-width: 100%;
+        }
+      }
+
+      .box-content {
+        margin-top: 40px;
+
+        pre {
+          text-wrap: inherit;
+          line-height: 1.4;
+          margin-top: 20px;
+        }
+      }
+    }
+
+  }
+
+}
 
 </style>

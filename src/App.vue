@@ -107,6 +107,7 @@ CUSTOM
   padding: 25px;
   position: relative;
   padding-top: 68px;
+  padding-bottom: 60px;
 }
 
 .header {

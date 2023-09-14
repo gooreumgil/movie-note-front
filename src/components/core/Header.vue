@@ -1,7 +1,9 @@
 <template>
   <header class="header">
     <div class="inner-header">
-      <nav>Movie Note</nav>
+      <nav>
+        <router-link to="/">Movie Note</router-link>
+      </nav>
       <nav class="login" v-if="!email"><router-link to="/auth/login">로그인</router-link></nav>
       <nav class="logout" v-else>
         <button type="button" @click="logout">로그아웃</button>
@@ -38,17 +40,15 @@
   .header {
     width: 100%;
     text-align: left;
-    //display: flex;
-    //justify-content: space-between;
     box-sizing: border-box;
     padding: 25px;
-    background-color: #79cfa2;
     font-weight: 700;
     color: #000;
     font-size: 20px;
+    border-bottom: 1px solid #ddd;
 
     .inner-header {
-      width: 1020px;
+      width: 800px;
       margin: 0 auto;
       position: relative;
     }
@@ -64,13 +64,14 @@
         right: 0;
         top: 50%;
         transform: translateY(-50%);
+        font-weight: 400;
       }
 
       button[type=button] {
         cursor: pointer;
         background-color: transparent;
         box-sizing: border-box;
-        font-weight: 700;
+        font-weight: 400;
         color: #333;
       }
 

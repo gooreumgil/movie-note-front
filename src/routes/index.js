@@ -63,7 +63,6 @@ export function redirectLoginPageIfTokenNotValid(to, from, next) {
         goLoginPage();
     }
 
-
     if (token) {
         authApi.tokenVerification()
             .then(thenFunc)
@@ -82,7 +81,6 @@ export function tokenValidIfTokenExists(to, from, next) {
         if (accessToken) {
             cookies.set("accessToken", accessToken, '4d', '/');
         }
-
         store.commit("SET_USER_EMAIL", email)
         store.commit("SET_USER_NICKNAME", nickname)
         store.commit("SET_USER_IMAGE_URL", imageUrl)
@@ -102,6 +100,8 @@ export function tokenValidIfTokenExists(to, from, next) {
             .then(thenFunc)
             .catch(catchFunc.bind(this))
     }
+
+    next();
 }
 
 /**
