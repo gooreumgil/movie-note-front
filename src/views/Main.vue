@@ -10,6 +10,7 @@
       </form>
 
     </div>
+
     <div class="container-inner">
 
       <div class="box-welcome" v-if="userNickname">
@@ -25,7 +26,13 @@
         <button @click="resetPage" type="button">x</button>
       </div>
 
+
+      <div class="box-sort-nav">
+        <nav @click="selectSort(sort)" v-for="(sort, sortIdx) in sorts" v-bind:key="sortIdx" v-bind:class="{'active': selectedSort === sort.value}">{{ sort.text }}</nav>
+      </div>
+
       <ul class="movie-review-wrapper">
+<!--        <div class="divider"></div>-->
         <li class="movie-review-list clearfix" v-for="(movieReview, movieReviewIdx) in movieReviewList" v-bind:key="movieReviewIdx">
 
           <div class="movie-review-list-inner clearfix">
@@ -34,7 +41,10 @@
                 {{ movieReview.title }}
               </router-link>
               <p class="review-content">{{ movieReview.content }}</p>
-              <p class="review-writer">by {{ movieReview.member.nickname }}</p>
+              <p class="review-info">
+                by <span class="name">{{ movieReview.member.nickname }}</span><br>
+                <span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD분 h:m') }}</span>
+              </p>
             </div>
 
             <div class="movie-review-item img" v-if="isExistsMovieReviewImg(movieReview)">
@@ -57,6 +67,8 @@ import {useRoute, useRouter} from "vue-router";
 import {computed} from "vue";
 import movieReviewApi from "@/api/movieReviewApi";
 import helloWorld from "@/components/HelloWorld.vue";
+import commonUtils from "@/utils/commonUtils";
+import mixin from "@/mixin/mixin";
 
 export default {
   setup() {
@@ -74,6 +86,7 @@ export default {
   components: {
     Header
   },
+  mixins: [mixin],
 
   data() {
     return {
@@ -90,7 +103,12 @@ export default {
         totalElements: 0,
         totalPages: 0
       },
-      movieReviewList: []
+      movieReviewList: [],
+      selectedSort: 'createdDateTime,DESC',
+      sorts: [
+        {value: 'createdDateTime,DESC', text: '최신순'},
+        {value: 'createdDateTime,ASC', text: '오래된순'}
+      ]
     }
   },
 
@@ -121,8 +139,9 @@ export default {
       const path = this.route.path;
       const searchWord = this.searchWord ? this.searchWord : '';
       const size = this.movieReviewPageInfo.size ? this.movieReviewPageInfo.size : '';
+      const sort = this.selectedSort ? this.selectedSort : '';
 
-      const newPath = `${path}?searchWord=${searchWord}&page=${page}&size=${size}`;
+      const newPath = `${path}?searchWord=${searchWord}&page=${page}&size=${size}&sort=${sort}`;
       const fullPath = this.route.fullPath;
 
       if (newPath === fullPath) {
@@ -138,11 +157,13 @@ export default {
       const searchWord = this.searchWord;
       const page = this.movieReviewPageInfo.currentPage;
       const size = this.movieReviewPageInfo.size;
+      const sort = this.selectedSort;
 
       const condition = {
         searchWord,
         page,
-        size
+        size,
+        sort
       }
 
       try {
@@ -170,6 +191,11 @@ export default {
       }
     },
 
+    selectSort(sort) {
+      this.selectedSort = sort.value;
+      this.setFindMovieReviewPath(1);
+    },
+
     async goMovieReviewDetail(movieReviewId) {
       await this.router.push(`/movie-reviews/${movieReviewId}`);
     },
@@ -183,6 +209,7 @@ export default {
       const searchWord = query.searchWord;
       const page = query.page;
       const size = query.size;
+      const sort = query.sort;
 
       this.searchWord = searchWord;
 
@@ -192,6 +219,10 @@ export default {
 
       if (size) {
         this.movieReviewPageInfo.size = size;
+      }
+
+      if (sort) {
+        this.selectedSort = sort;
       }
 
     },
@@ -211,6 +242,10 @@ export default {
 
     isExistsMovieReviewImg(movieReview) {
       return movieReview.uploadFileList.length > 0;
+    },
+
+    convertDateToString(value) {
+      return commonUtils.convertDateToStrWithMinutes(value);
     },
 
   },
@@ -329,10 +364,46 @@ export default {
 
 }
 
+.box-sort-nav {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-top: 10px;
+
+  nav {
+    font-size: 13px;
+    box-sizing: border-box;
+    padding: 6px 9px;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+    border-radius: 100px;
+    cursor: pointer;
+
+    &.active {
+      background-color: #42b983;
+      color: #fff;
+      font-weight: 400;
+      //border: 1px solid #2d9fd3;
+      border: 1px solid #42b983;
+    }
+  }
+
+}
+
 ul {
 
-  margin-top: 60px;
+  margin-top: 45px;
   position: relative;
+
+  //.divider {
+  //  height: 1px;
+  //  width: calc(100% - 20px);
+  //  margin: 0 auto;
+  //  background-color: #ddd;
+  //  margin-bottom: 30px;
+  //}
 
   li {
     box-sizing: border-box;
@@ -345,7 +416,7 @@ ul {
       //border: 1px solid #ddd;
       border-bottom: 1px solid #ddd;
       //border-radius: 5px;
-      height: 150px;
+      height: 165px;
       overflow: hidden;
 
       .movie-review-item {
@@ -414,11 +485,23 @@ ul {
         -webkit-box-orient: vertical;
       }
 
-      p.review-writer {
+      p.review-info {
         position: absolute;
         bottom: 30px;
         font-size: 13px;
         color: #777;
+
+        .name {
+          font-weight: 400;
+          color: #418fd5;
+        }
+
+        .wrote-time {
+          display: inline-block;
+          margin-top: 7px;
+          font-size: 12px;
+          color: #a0a0a0;
+        }
       }
 
     }

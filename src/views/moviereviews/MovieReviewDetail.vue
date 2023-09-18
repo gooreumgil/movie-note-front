@@ -95,13 +95,15 @@ export default {
         margin-top: 40px;
 
         h2 {
-          font-size: 30px;
-          font-weight: 400;
+          font-size: 24px;
+          font-weight: 300;
           color: #000;
         }
 
         p {
           margin-top: 10px;
+          font-size: 14px;
+          color: #a0a0a0;
         }
       }
 
