@@ -8,6 +8,9 @@
       <form @submit.prevent="login()">
         <input v-model.trim="email" type="text" placeholder="이메일">
         <input v-model.trim="password" type="password" placeholder="패스워드를 입력하세요">
+        <button class="go-home" type="button">
+          <router-link to="/">홈으로</router-link>
+        </button>
         <button type="submit">로그인</button>
         <button type="button">
           <router-link to="/auth/sign-up">회원가입</router-link>
@@ -98,6 +101,7 @@ export default {
         box-sizing: border-box;
         border: 1px solid #ddd;
         padding: 10px;
+        background-color: #f9f9f9;
 
         &:first-child {
           border-bottom: 0;
@@ -111,9 +115,12 @@ export default {
         padding: 15px;
         font-weight: 700;
         border-radius: 0;
+        margin-top: 5px;
+
+
 
         &[type=submit] {
-          margin-top: 20px;
+          //margin-top: 20px;
           background-color: #42b983;
           color: #000;
         }
@@ -121,6 +128,12 @@ export default {
         &[type=button] {
           margin-top: 5px;
           background-color: #42b5b9;
+
+          &.go-home {
+            margin-top: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+          }
 
           a {
             display: inline-block;
