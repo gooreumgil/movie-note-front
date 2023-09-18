@@ -34,17 +34,24 @@
       <ul class="movie-review-wrapper">
 <!--        <div class="divider"></div>-->
         <li class="movie-review-list clearfix" v-for="(movieReview, movieReviewIdx) in movieReviewList" v-bind:key="movieReviewIdx">
-
           <div class="movie-review-list-inner clearfix">
             <div class="movie-review-item content" v-bind:style="{width: isExistsMovieReviewImg(movieReview) ? '70%' : '100%'}">
               <router-link :to="`/movie-reviews/${movieReview.id}`">
                 {{ movieReview.title }}
               </router-link>
               <p class="review-content">{{ movieReview.content }}</p>
-              <p class="review-info">
-                by <span class="name">{{ movieReview.member.nickname }}</span><br>
-                <span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD분 h:m') }}</span>
-              </p>
+              <div class="review-info">
+                <p>
+                  by <span class="name">{{ movieReview.member.nickname }}</span><br>
+                  <span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</span>
+                </p>
+                <div v-if="movieReview.isOwn" class="own-review">
+                  <button type="button">
+                    <router-link :to="`/movie-reviews/${movieReview.id}/edit`">수정</router-link>
+                  </button>
+                  <button @click="reviewDelete(movieReview)" type="button">삭제</button>
+                </div>
+              </div>
             </div>
 
             <div class="movie-review-item img" v-if="isExistsMovieReviewImg(movieReview)">
@@ -244,8 +251,19 @@ export default {
       return movieReview.uploadFileList.length > 0;
     },
 
-    convertDateToString(value) {
-      return commonUtils.convertDateToStrWithMinutes(value);
+    async reviewDelete(movieReview) {
+      if (!confirm('정말로 삭제 하시겠습니까?')) {
+        return;
+      }
+
+      try {
+        await movieReviewApi.deleteMovieReview(movieReview.id);
+        alert("삭제 되었습니다!");
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      }
+
     },
 
   },
@@ -471,7 +489,7 @@ ul {
         }
       }
 
-      p.review-content {
+      .review-content {
         font-size: 13px;
         margin-top: 5px;
         line-height: 1.4;
@@ -485,23 +503,40 @@ ul {
         -webkit-box-orient: vertical;
       }
 
-      p.review-info {
+      .review-info {
         position: absolute;
-        bottom: 30px;
-        font-size: 13px;
-        color: #777;
+        bottom: 15px;
+        p {
+          font-size: 13px;
+          color: #777;
+          .name {
+            font-weight: 400;
+            color: #418fd5;
+          }
 
-        .name {
-          font-weight: 400;
-          color: #418fd5;
+          .wrote-time {
+            display: inline-block;
+            margin-top: 7px;
+            font-size: 12px;
+            color: #a0a0a0;
+          }
         }
 
-        .wrote-time {
-          display: inline-block;
-          margin-top: 7px;
-          font-size: 12px;
-          color: #a0a0a0;
+        .own-review {
+          margin-top: 10px;
+          button {
+            color: #333;
+            font-size: 12px;
+            margin-right: 2px;
+            a {
+              font-size: 12px;
+              font-weight: 400;
+              color: #333;
+            }
+
+          }
         }
+
       }
 
     }

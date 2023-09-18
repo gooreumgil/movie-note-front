@@ -20,4 +20,9 @@ export default {
         return apiClient.get(url);
     },
 
+    deleteMovieReview(id) {
+        const url = `/api/v1/session-member/movie-reviews/${id}`;
+        return apiClient.delete(url);
+    },
+
 }

@@ -6,6 +6,7 @@ import {useCookies} from "vue3-cookies";
 import store from "@/store";
 import SignUp from "@/views/auth/SignUp.vue";
 import movieReviewDetail from "@/views/moviereviews/MovieReviewDetail.vue";
+import MovieReviewEdit from "@/views/moviereviews/MovieReviewEdit.vue";
 
 const {cookies} = useCookies();
 
@@ -156,6 +157,11 @@ export const router = createRouter({
         {
             path: "/movie-reviews/:id",
             component: movieReviewDetail
+        },
+        {
+            path: "/movie-reviews/:id/edit",
+            component: MovieReviewEdit,
+            beforeEnter: redirectLoginPageIfTokenNotValid
         }
     ]
 })

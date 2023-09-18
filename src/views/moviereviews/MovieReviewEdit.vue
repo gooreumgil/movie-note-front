@@ -5,11 +5,8 @@
 
       <div class="box-review">
         <div class="box-title">
-          <h2 class="title">{{ movieReview.title }}</h2>
-          <p class="nickname">by {{ movieReview.member.nickname }}</p>
-          <div class="review-info">
-            <p class="created-date">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</p>
-          </div>
+          <h2>{{ movieReview.title }}</h2>
+          <p>by {{ movieReview.member.nickname }}</p>
         </div>
         <div class="box-content">
           <div class="box-image" v-if="isExistsMovieReviewImg(movieReview)">
@@ -29,12 +26,10 @@
 import Header from "@/components/core/Header.vue";
 import {useRoute, useRouter} from "vue-router";
 import movieReviewApi from "@/api/movieReviewApi";
-import mixin from "@/mixin/mixin";
 
 export default {
-  name: "MovieReviewDetail",
+  name: "MovieReviewEdit",
   components: {Header},
-  mixins: [mixin],
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -109,16 +104,6 @@ export default {
           margin-top: 10px;
           font-size: 14px;
           color: #a0a0a0;
-        }
-
-        .nickname {
-          margin-top: 20px;
-        }
-
-        .review-info {
-          .created-date {
-            font-size: 12px;
-          }
         }
       }
 
