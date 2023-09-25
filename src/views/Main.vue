@@ -43,7 +43,7 @@
               <div class="review-info">
                 <p>
                   by <span class="name">{{ movieReview.member.nickname }}</span><br>
-                  <span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</span>
+                  <span class="statistics">댓글</span><span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</span>
                 </p>
                 <div v-if="movieReview.isOwn" class="own-review">
                   <button type="button">
@@ -326,7 +326,6 @@ export default {
         outline: none;
         font-size: 15px;
         border-radius: 100px;
-
         &::placeholder {
           font-size: 13px;
         }
@@ -339,11 +338,12 @@ export default {
         height: 35px;
         top: 0;
         right: -55px;
-        background-color: #ddd;
+        background-color: #ffdd42;
         color: #000;
         font-weight: 700;
         padding: 10px;
         border-radius: 100px;
+        line-height: 0;
       }
     }
   }
@@ -415,18 +415,12 @@ ul {
   margin-top: 45px;
   position: relative;
 
-  //.divider {
-  //  height: 1px;
-  //  width: calc(100% - 20px);
-  //  margin: 0 auto;
-  //  background-color: #ddd;
-  //  margin-bottom: 30px;
-  //}
 
   li {
     box-sizing: border-box;
     padding: 10px;
     margin-bottom: 20px;
+    position: relative;
 
     .movie-review-list-inner {
       position: relative;
@@ -514,6 +508,13 @@ ul {
             color: #418fd5;
           }
 
+          .statistics {
+            display: inline-block;
+            margin-top: 7px;
+            font-size: 12px;
+            color: #a0a0a0;
+          }
+
           .wrote-time {
             display: inline-block;
             margin-top: 7px;
@@ -526,10 +527,10 @@ ul {
           margin-top: 10px;
           button {
             color: #333;
-            font-size: 12px;
+            font-size: 11px;
             margin-right: 2px;
             a {
-              font-size: 12px;
+              font-size: 11px;
               font-weight: 400;
               color: #333;
             }

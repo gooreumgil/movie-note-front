@@ -2,6 +2,7 @@
   <div id="app">
     <router-view></router-view>
   </div>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </template>
 <script>
 
@@ -15,6 +16,8 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Skranji:wght@400;700&display=swap');
+
 *{
   font-family: 'Noto Sans KR', Helvetica, Arial, sans-serif;
 }

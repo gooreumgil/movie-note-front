@@ -1,19 +1,21 @@
 <template>
   <section class="container-main">
     <div class="box-title">
-      <h2>로그인 해주세요.</h2>
+      <h2>Movie Note</h2>
+<!--      <p>로그인해주세요.</p>-->
     </div>
 
     <div class="login-box">
       <form @submit.prevent="login()">
         <input v-model.trim="email" type="text" placeholder="이메일">
         <input v-model.trim="password" type="password" placeholder="패스워드를 입력하세요">
-        <button class="go-home" type="button">
-          <router-link to="/">홈으로</router-link>
-        </button>
+
         <button type="submit">로그인</button>
         <button type="button">
           <router-link to="/auth/sign-up">회원가입</router-link>
+        </button>
+        <button class="go-home" type="button">
+          <router-link to="/">홈으로</router-link>
         </button>
       </form>
     </div>
@@ -82,18 +84,26 @@ export default {
       margin: 0 auto;
 
       width: 300px;
-      text-align: left;
+      text-align: center;
       margin-top: 100px;
 
       h2 {
-        font-size: 24px;
+        font-size: 36px;
+        font-family: 'Skranji', cursive;
+        font-weight: 700;
+        color: #ff005c;
+      }
+
+      p {
+        margin-top: 5px;
+        color: #555;
       }
     }
 
     form {
       width: 300px;
       margin: 0 auto;
-      margin-top: 20px;
+      margin-top: 40px;
 
       text-align: left;
       input {
@@ -115,22 +125,20 @@ export default {
         padding: 15px;
         font-weight: 700;
         border-radius: 0;
-        margin-top: 5px;
-
-
+        margin-top: 15px;
 
         &[type=submit] {
           //margin-top: 20px;
-          background-color: #42b983;
-          color: #000;
+          background-color: #ff005c;
+          color: #fff;
+          font-weight: 700;
         }
 
         &[type=button] {
           margin-top: 5px;
-          background-color: #42b5b9;
+          background-color: #ffdd42;
 
           &.go-home {
-            margin-top: 10px;
             background-color: #fff;
             border: 1px solid #ddd;
           }

@@ -55,6 +55,13 @@
 
     nav {
 
+      &:first-child a {
+        font-family: 'Skranji', cursive;
+        font-weight: 700;
+        color: #ff005c;
+        font-size: 22px;
+      }
+
       &:last-child {
         font-size: 13px;
       }
