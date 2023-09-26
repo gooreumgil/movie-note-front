@@ -43,14 +43,8 @@
               <div class="review-info">
                 <p>
                   by <span class="name">{{ movieReview.member.nickname }}</span><br>
-                  <span class="statistics">댓글</span><span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</span>
+                  <span class="wrote-time">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 hh:mm') }}</span><span class="middle-dot">&#183;</span><span class="statistics">댓글 {{ movieReview.statistics.replyTotal }} 좋아요 {{ movieReview.statistics.likeTotal }}</span>
                 </p>
-                <div v-if="movieReview.isOwn" class="own-review">
-                  <button type="button">
-                    <router-link :to="`/movie-reviews/${movieReview.id}/edit`">수정</router-link>
-                  </button>
-                  <button @click="reviewDelete(movieReview)" type="button">삭제</button>
-                </div>
               </div>
             </div>
 
@@ -513,6 +507,12 @@ ul {
             margin-top: 7px;
             font-size: 12px;
             color: #a0a0a0;
+          }
+
+          .middle-dot {
+            display: inline-block;
+            margin-left: 5px;
+            margin-right: 5px;
           }
 
           .wrote-time {

@@ -18,8 +18,19 @@
           <div class="box-text">
             <pre>{{ movieReview.content }}</pre>
           </div>
+          <div class="box-statistics">
+            <p>댓글 {{ movieReview.statistics.replyTotal }} 좋아요 {{ movieReview.statistics.likeTotal }}</p>
+          </div>
+
         </div>
-<!--        {{ movieReview }}-->
+      </div>
+
+      <div class="box-reply">
+        <ul class="wrapper-reply">
+          <li class="list-reply" v-for="(reply, replyIdx) in movieReviewReplyList" v-bind:key="replyIdx">
+            {{ reply }}
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -44,11 +55,20 @@ export default {
     const params = this.route.params;
     const id = params.id;
     await this.getMovieReview(id)
+    await this.getMovieReviewReplies(id);
   },
   data() {
     return {
       init: false,
-      movieReview: null
+      movieReview: null,
+      movieReviewReplyList: [],
+      movieReviewReplyPageInfo: {
+        currentPage: 1,
+        last: false,
+        size: 10,
+        totalElements: 0,
+        totalPages: 0
+      }
     }
   },
   methods: {
@@ -57,6 +77,29 @@ export default {
         const { data } = await movieReviewApi.getMovieReview(id);
         this.movieReview = data;
         this.init = true;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async getMovieReviewReplies(id) {
+      try {
+        const { data } = await movieReviewApi.getMovieReviewReplies(id);
+
+        const pageInfo = data.pageInfo;
+        if (pageInfo) {
+          this.movieReviewReplyPageInfo.currentPage = pageInfo.currentPage
+          this.movieReviewReplyPageInfo.last = pageInfo.last
+          this.movieReviewReplyPageInfo.size = pageInfo.size
+          this.movieReviewReplyPageInfo.totalElements = pageInfo.totalElements
+          this.movieReviewReplyPageInfo.totalPages = pageInfo.totalPages
+        }
+
+        const list = data.list;
+        if (list && list.length > 0) {
+          this.movieReviewReplyList = list;
+        }
+
       } catch (err) {
         console.log(err);
       }
@@ -116,8 +159,8 @@ export default {
         }
 
         .review-info {
+          font-size: 12px;
           .created-date {
-            font-size: 12px;
           }
         }
       }
