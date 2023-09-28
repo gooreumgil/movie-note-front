@@ -28,9 +28,18 @@
       <div class="box-reply">
         <ul class="wrapper-reply">
           <li class="list-reply" v-for="(reply, replyIdx) in movieReviewReplyList" v-bind:key="replyIdx">
-            {{ reply }}
+            <p class="reply-writer">{{ reply.member.nickname }}</p>
+            <p class="reply-datetime">{{ dateTimeTo(reply.createdDateTime, 'yyyy년 MM월 h:mm분') }}</p>
+            <p class="reply-content">{{ reply.content }}</p>
           </li>
         </ul>
+      </div>
+
+      <div class="box-reply-write">
+        <form action="">
+          <textarea @click="goLoginPage()" v-if="!userNickname" rows="5" placeholder="댓글을 달려면 로그인해주세요."></textarea>
+          <textarea v-else rows="5" placeholder="댓글을 입력해주세요."></textarea>
+        </form>
       </div>
     </div>
   </section>
@@ -41,6 +50,8 @@ import Header from "@/components/core/Header.vue";
 import {useRoute, useRouter} from "vue-router";
 import movieReviewApi from "@/api/movieReviewApi";
 import mixin from "@/mixin/mixin";
+import {computed} from "vue";
+import {useStore} from "vuex";
 
 export default {
   name: "MovieReviewDetail",
@@ -49,7 +60,9 @@ export default {
   setup() {
     const router = useRouter();
     const route = useRoute();
-    return {router, route};
+    const store = useStore();
+    const userNickname = computed(() => store.state.userInfo.nickname);
+    return {router, route, store, userNickname};
   },
   async created() {
     const params = this.route.params;
@@ -112,6 +125,11 @@ export default {
     isExistsMovieReviewImg(movieReview) {
       return movieReview.uploadFileList.length > 0;
     },
+
+    goLoginPage() {
+      this.router.push('/auth/login');
+    },
+
   }
 }
 </script>
@@ -134,6 +152,7 @@ export default {
     width: 820px;
     margin: 0 auto;
     text-align: left;
+    padding-bottom: 80px;
 
     .box-review {
       box-sizing: border-box;
@@ -178,6 +197,61 @@ export default {
           text-wrap: inherit;
           line-height: 1.4;
           margin-top: 20px;
+        }
+      }
+
+      .box-statistics {
+        p {
+          font-size: 14px;
+          font-weight: 400;
+          margin-top: 20px;
+        }
+      }
+    }
+
+    .box-reply {
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: 14px;
+
+      ul {
+
+        background-color: #f6f6f6;
+
+        li {
+
+          box-sizing: border-box;
+          padding: 15px;
+
+          .reply-writer {
+            font-weight: 700;
+          }
+
+          .reply-datetime {
+            margin-top: 5px;
+            font-size: 13px;
+          }
+
+          .reply-content {
+            margin-top: 10px;
+          }
+
+        }
+      }
+    }
+
+    .box-reply-write {
+      box-sizing: border-box;
+      padding: 10px;
+
+      form {
+        textarea {
+          width: 100%;
+          box-sizing: border-box;
+          border: 1px solid #ddd;
+          border-radius: 3px;
+          padding: 10px;
+          outline: none;
         }
       }
     }

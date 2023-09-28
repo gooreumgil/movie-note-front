@@ -1,7 +1,7 @@
 <template>
   <section class="container-main">
     <div class="box-title">
-      <h2>회원가입</h2>
+      <h2>Movie Note</h2>
     </div>
 
     <div class="outer-form">
@@ -75,18 +75,21 @@
     margin: 0 auto;
 
     width: 300px;
-    text-align: left;
+    text-align: center;
     margin-top: 100px;
 
     h2 {
-      font-size: 24px;
+      font-size: 36px;
+      font-family: 'Skranji', cursive;
+      color: #ff005c;
+      font-weight: 700;
     }
   }
 
   form {
     width: 300px;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 40px;
 
     text-align: left;
     input {
@@ -112,6 +115,7 @@
         margin-top: 20px;
         background-color: #42b983;
         color: #000;
+        font-weight: 700;
       }
 
       &[type=button] {

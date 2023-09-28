@@ -18,19 +18,24 @@
   import store from "@/store";
   import {useCookies} from "vue3-cookies";
   import {useRouter} from "vue-router";
+  import {useStore} from "vuex";
 
   export default {
     name: "Header",
     setup() {
       const cookies = useCookies().cookies;
       const router = useRouter();
+      const store = useStore();
       const email = computed(() => store.getters.getEmail);
-      return {email, cookies, router};
+      return {email, cookies, router, store};
     },
     methods: {
       logout() {
         this.cookies.remove("accessToken", "/")
         this.router.replace("/auth/login");
+        this.store.state.userInfo.nickname = null;
+        this.store.state.userInfo.email = null;
+        this.store.state.userInfo.imageUrl = null;
       },
     }
   }

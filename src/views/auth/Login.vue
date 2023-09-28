@@ -129,14 +129,17 @@ export default {
 
         &[type=submit] {
           //margin-top: 20px;
-          background-color: #ff005c;
-          color: #fff;
+          //background-color: #ff005c;
+          //background-color: #333;
+          background-color: #42b983;
+          color: #000;
           font-weight: 700;
         }
 
         &[type=button] {
           margin-top: 5px;
           background-color: #ffdd42;
+          padding: 0;
 
           &.go-home {
             background-color: #fff;
@@ -147,6 +150,7 @@ export default {
             display: inline-block;
             width: 100%;
             height: 100%;
+            padding: 15px 0;
           }
         }
 
