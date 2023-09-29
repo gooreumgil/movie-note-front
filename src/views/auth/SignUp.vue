@@ -36,7 +36,6 @@
     },
     methods: {
       async signUp() {
-        console.log('들어옴');
         const email = this.email;
         const name = this.name;
         const nickname = this.nickname;
@@ -59,7 +58,7 @@
           alert('회원가입이 완료 되었습니다!');
           await this.router.push('/auth/login');
         } catch (err) {
-          console.log(err);
+          alert(err.response.data.message);
         }
 
       },

@@ -29,16 +29,17 @@
         <ul class="wrapper-reply">
           <li class="list-reply" v-for="(reply, replyIdx) in movieReviewReplyList" v-bind:key="replyIdx">
             <p class="reply-writer">{{ reply.member.nickname }}</p>
-            <p class="reply-datetime">{{ dateTimeTo(reply.createdDateTime, 'yyyy년 MM월 h:mm분') }}</p>
+            <p class="reply-datetime">{{ dateTimeTo(reply.createdDateTime, 'yyyy년 MM월 DD일 h:mm') }}</p>
             <p class="reply-content">{{ reply.content }}</p>
           </li>
         </ul>
       </div>
 
       <div class="box-reply-write">
-        <form action="">
+        <form @submit.prevent="saveReply()">
           <textarea @click="goLoginPage()" v-if="!userNickname" rows="5" placeholder="댓글을 달려면 로그인해주세요."></textarea>
-          <textarea v-else rows="5" placeholder="댓글을 입력해주세요."></textarea>
+          <textarea v-else rows="5" v-model="replyContent" placeholder="댓글을 입력해주세요."></textarea>
+          <button type="submit">입력</button>
         </form>
       </div>
     </div>
@@ -81,7 +82,8 @@ export default {
         size: 10,
         totalElements: 0,
         totalPages: 0
-      }
+      },
+      replyContent: null
     }
   },
   methods: {
@@ -116,6 +118,48 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+
+    async saveReply() {
+
+      const replyContent = this.replyContent;
+      if (!replyContent) {
+        alert("내용을 입력해주세요!");
+        return;
+      }
+
+      const replySaveModel = {
+        content: replyContent
+      }
+
+      const params = this.route.params;
+      const id = params.id;
+
+      try {
+        await movieReviewApi.saveMovieReviewReply(id, replySaveModel);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.replyContent = null;
+        await this.getMovieReviewStatistics(id);
+        await this.getMovieReviewReplies(id);
+      }
+
+
+    },
+
+    async getMovieReviewStatistics(id) {
+
+      try {
+        const { data } = await movieReviewApi.getMovieReviewStatistics(id);
+        console.log(data);
+        if (data) {
+          this.movieReview.statistics = data;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
     },
 
     getMovieReviewImg(movieReview) {
@@ -216,12 +260,13 @@ export default {
 
       ul {
 
-        background-color: #f6f6f6;
 
         li {
 
           box-sizing: border-box;
           padding: 15px;
+          background-color: #f6f6f6;
+          margin-bottom: 10px;
 
           .reply-writer {
             font-weight: 700;
@@ -252,6 +297,19 @@ export default {
           border-radius: 3px;
           padding: 10px;
           outline: none;
+        }
+
+        button {
+          &[type=submit] {
+            margin-top: 2px;
+            background-color: #42b983;
+            color: #000000;
+            font-weight: 700;
+            box-sizing: border-box;
+            padding: 5px 7px;
+            font-size: 12px;
+            border-radius: 3px;
+          }
         }
       }
     }
