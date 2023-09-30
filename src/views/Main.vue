@@ -6,6 +6,7 @@
         <div class="box-input">
           <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">
           <button type="submit">검색</button>
+          <button type="button">작성하기</button>
         </div>
       </form>
 
@@ -330,14 +331,23 @@ export default {
         display: inline-block;
         position: absolute;
         height: 35px;
-        top: 0;
-        right: -55px;
-        background-color: #ffdd42;
-        color: #000;
-        font-weight: 700;
+
         padding: 10px;
         border-radius: 100px;
         line-height: 0;
+        font-weight: 700;
+
+        &[type=submit] {
+          top: 0;
+          right: -55px;
+          background-color: #ffdd42;
+          color: #000;
+        }
+
+        &[type=button] {
+          right: -125px;
+          background-color: #51d99b;
+        }
       }
     }
   }
@@ -394,11 +404,12 @@ export default {
     cursor: pointer;
 
     &.active {
-      background-color: #42b983;
-      color: #fff;
-      font-weight: 400;
+      //background-color: #42b983;
+      background-color: #65e1eb;
+      color: #000;
+      font-weight: 700;
       //border: 1px solid #2d9fd3;
-      border: 1px solid #42b983;
+      border: 1px solid #65e1eb;
     }
   }
 
