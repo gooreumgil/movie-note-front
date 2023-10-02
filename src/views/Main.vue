@@ -6,7 +6,7 @@
         <div class="box-input">
           <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">
           <button type="submit">검색</button>
-          <button type="button">작성하기</button>
+          <button type="button"><router-link to="/movie-reviews/save">작성하기</router-link></button>
         </div>
       </form>
 

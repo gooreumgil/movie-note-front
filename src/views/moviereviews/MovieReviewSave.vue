@@ -3,9 +3,28 @@
     <Header />
     <div class="container-inner">
 
-      <div class="box-review">
-
+      <div class="box-title">
+        <h2>리뷰를 작성해주세요.</h2>
       </div>
+
+      <form @submit.prevent="saveMovieReview">
+
+        <div v-if="uploadImageFileResult" class="upload-image-preview" v-bind:style="{backgroundImage: 'url(' + uploadImageFileResult + ')'}"></div>
+
+        <div class="box-review-title">
+          <input v-model="reviewTitle" type="text" placeholder="제목을 입력하세요.">
+        </div>
+        <div class="box-content">
+          <div class="box-content">
+            <textarea v-model="reviewContent" placeholder="내용을 입력하세요." rows="8"></textarea>
+          </div>
+          <div class="box-img">
+            <input id="file-selector" ref="file" type="file" @change="handleFileUpload" accept="image/*">
+          </div>
+        </div>
+        <button type="submit">작성하기</button>
+      </form>
+
 
     </div>
   </section>
@@ -14,10 +33,11 @@
 <script>
 import Header from "@/components/core/Header.vue";
 import {useRoute, useRouter} from "vue-router";
-import movieReviewApi from "@/api/movieReviewApi";
 import mixin from "@/mixin/mixin";
 import {computed} from "vue";
 import {useStore} from "vuex";
+import uploadFileApi from "@/api/uploadFileApi";
+import movieReviewApi from "@/api/movieReviewApi";
 
 export default {
   name: "MovieReviewSave",
@@ -32,17 +52,86 @@ export default {
   },
   async created() {
 
-
+    this.init = true;
   },
   data() {
     return {
       init: false,
-      movieReview: null,
-      replyContent: null
+      reviewTitle: null,
+      reviewContent: null,
+      uploadImageFile: null,
+      uploadImageFileResult: null
     }
   },
   methods: {
 
+    async saveMovieReview() {
+
+
+      const uploadImageFile = this.uploadImageFile;
+
+      const formData = new FormData();
+      formData.append('file', uploadImageFile);
+
+      let uploadFileIds = [];
+
+      try {
+        const { data } = await uploadFileApi.saveUploadFile(formData, 'MOVIE_REVIEW_IMAGE');
+        uploadFileIds.push(data.id);
+      } catch (err) {
+        alert('오류가 발생하였습니다');
+        console.log(err);
+        return;
+      }
+
+      if (uploadFileIds.length === 0) {
+        console.log(uploadFileIds.length)
+        return;
+      }
+
+      const reviewTitle = this.reviewTitle;
+      const reviewContent = this.reviewContent;
+
+      const movieReviewSaveData = {
+        title: reviewTitle,
+        content: reviewContent,
+        uploadFileIds
+      }
+
+      try {
+        await movieReviewApi.saveMovieReview(movieReviewSaveData);
+        alert("성공적으로 등록 되었습니다!");
+        await this.router.replace('/');
+      } catch (err) {
+        console.log(err);
+      }
+
+    },
+
+    handleFileUpload(event) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+
+        this.uploadImageFile = files[0];
+
+        if (window.File && window.FileList && window.FileReader) {
+
+          const file = files.item(0);
+          //Only pics
+          if (!file.type.match('image')) return;
+
+          const picReader = new FileReader();
+
+          picReader.onload = function (e) {
+            this.uploadImageFileResult = e.target.result;
+          }.bind(this);
+          picReader.readAsDataURL(file);
+        } else {
+          console.log("Your browser does not support File API");
+        }
+
+      }
+    },
 
   }
 }
@@ -68,119 +157,81 @@ export default {
     text-align: left;
     padding-bottom: 80px;
 
-    .box-review {
+    .box-title {
+      box-sizing: border-box;
+      padding: 0 10px;
+      margin-top: 60px;
+
+      h2 {
+        font-size: 20px;
+        color: #000;
+        font-weight: 400;
+      }
+    }
+
+    form {
       box-sizing: border-box;
       padding: 10px;
 
-      .box-title {
-        margin-top: 40px;
-
-        h2 {
-          font-size: 24px;
-          font-weight: 300;
-          color: #000;
-        }
-
-        p {
-          margin-top: 10px;
-          font-size: 14px;
-          color: #a0a0a0;
-        }
-
-        .nickname {
-          margin-top: 20px;
-        }
-
-        .review-info {
-          font-size: 12px;
-          .created-date {
-          }
-        }
+      .upload-image-preview {
+        width: 150px;
+        height: 150px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
 
-      .box-image {
-        img {
-          max-width: 100%;
+      input {
+        width: 100%;
+        box-sizing: border-box;
+
+        &[type=text] {
+          padding: 15px;
         }
+
+        &[type=file] {
+          margin-top: 10px;
+        }
+
+      }
+
+      textarea {
+        width: 100%;
+        outline: none;
+        border: 1px solid #ddd;
+        margin-top: 10px;
+        box-sizing: border-box;
+        padding: 15px;
+      }
+
+      .box-review-title {
+        margin-top: 15px;
+
+      }
+
+      .box-img {
+
       }
 
       .box-content {
-        margin-top: 40px;
 
-        pre {
-          text-wrap: inherit;
-          line-height: 1.4;
-          margin-top: 20px;
-        }
       }
 
-      .box-statistics {
-        p {
-          font-size: 14px;
-          font-weight: 400;
-          margin-top: 20px;
-        }
-      }
     }
 
-    .box-reply {
-      box-sizing: border-box;
-      padding: 10px;
-      font-size: 14px;
-
-      ul {
-
-
-        li {
-
-          box-sizing: border-box;
-          padding: 15px;
-          background-color: #f6f6f6;
-          margin-bottom: 10px;
-
-          .reply-writer {
-            font-weight: 700;
-          }
-
-          .reply-datetime {
-            margin-top: 5px;
-            font-size: 13px;
-          }
-
-          .reply-content {
-            margin-top: 10px;
-          }
-
-        }
-      }
-    }
-
-    .box-reply-write {
-      box-sizing: border-box;
-      padding: 10px;
-
-      form {
-        textarea {
-          width: 100%;
-          box-sizing: border-box;
-          border: 1px solid #ddd;
-          border-radius: 3px;
-          padding: 10px;
-          outline: none;
-        }
-
-        button {
-          &[type=submit] {
-            margin-top: 2px;
-            background-color: #42b983;
-            color: #000000;
-            font-weight: 700;
-            box-sizing: border-box;
-            padding: 5px 7px;
-            font-size: 12px;
-            border-radius: 3px;
-          }
-        }
+    button {
+      &[type=submit] {
+        margin-top: 10px;
+        background-color: #51d99b;
+        color: #000;
+        font-weight: 700;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 3px;
+        font-size: 13px;
       }
     }
 

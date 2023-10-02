@@ -3,7 +3,6 @@ import apiClient from "@/core/apiClient";
 export default {
 
     getMovieReviews(condition) {
-        console.log(condition);
         const url = `/api/v1/movie-reviews`;
         return apiClient.get(url, {
             params: {
@@ -13,6 +12,11 @@ export default {
                 sort: condition.sort
             }
         })
+    },
+
+    saveMovieReview(data) {
+        const url = `/api/v1/session-member/movie-reviews`;
+        return apiClient.post(url, data);
     },
 
     getMovieReview(id) {
