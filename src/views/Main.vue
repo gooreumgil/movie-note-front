@@ -259,6 +259,7 @@ export default {
     searchConditionReset() {
       this.searchWord = null;
       this.completedSearchWord = null;
+      this.movieReviewPageInfo.currentPage = 1;
     },
 
     getMovieReviewImgUrl(movieReview) {
