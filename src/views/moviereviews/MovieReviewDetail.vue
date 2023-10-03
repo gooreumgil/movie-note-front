@@ -213,7 +213,7 @@ export default {
 
         p {
           margin-top: 10px;
-          font-size: 12px;
+          font-size: 13px;
           color: #a0a0a0;
         }
 
@@ -222,9 +222,9 @@ export default {
         }
 
         .review-info {
-          font-size: 12px;
+          font-size: 13px;
           .created-date {
-            margin-top: 8px;
+            margin-top: 10px;
           }
         }
       }
@@ -239,7 +239,7 @@ export default {
         margin-top: 40px;
 
         pre {
-          font-size: 13px;
+          font-size: 15px;
           text-wrap: inherit;
           line-height: 1.4;
           margin-top: 20px;

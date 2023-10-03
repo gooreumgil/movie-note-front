@@ -335,7 +335,7 @@ export default {
       }
 
       button {
-        font-size: 11px;
+        font-size: 12px;
         display: inline-block;
         position: absolute;
         height: 35px;
@@ -347,13 +347,13 @@ export default {
 
         &[type=submit] {
           top: 0;
-          right: -50px;
+          right: -55px;
           background-color: #ffdd42;
           color: #000;
         }
 
         &[type=button] {
-          right: -120px;
+          right: -125px;
           background-color: #51d99b;
         }
       }
@@ -519,7 +519,7 @@ ul {
         position: absolute;
         bottom: 15px;
         p {
-          font-size: 12px;
+          font-size: 13px;
           color: #777;
           .name {
             font-weight: 400;
@@ -529,7 +529,7 @@ ul {
           .statistics {
             display: inline-block;
             margin-top: 7px;
-            font-size: 12px;
+            font-size: 13px;
             color: #a0a0a0;
           }
 
@@ -542,7 +542,7 @@ ul {
           .wrote-time {
             display: inline-block;
             margin-top: 7px;
-            font-size: 12px;
+            font-size: 13px;
             color: #a0a0a0;
           }
         }

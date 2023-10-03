@@ -68,7 +68,7 @@
       }
 
       &:last-child {
-        font-size: 12px;
+        font-size: 13px;
       }
 
       &.login, &.logout {
@@ -85,7 +85,7 @@
         box-sizing: border-box;
         font-weight: 400;
         color: #333;
-        font-size: 12px;
+        font-size: 13px;
       }
 
     }
