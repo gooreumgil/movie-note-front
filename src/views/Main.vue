@@ -477,7 +477,7 @@ ul {
       }
 
       .box-img {
-        height: 100px;
+        height: 142px;
         width: 100px;
         margin: 0 auto;
         margin-right: 0;

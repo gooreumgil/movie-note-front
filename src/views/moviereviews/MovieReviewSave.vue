@@ -177,10 +177,11 @@ export default {
       .upload-image-preview {
         //width: 150px;
         //height: 150px;
-        max-width: 100%;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
+        max-width: 500px;
+        width: 100%;
+        //background-position: center center;
+        //background-repeat: no-repeat;
+        //background-size: cover;
         border-radius: 10px;
         margin-top: 10px;
         margin-bottom: 10px;
@@ -190,7 +191,7 @@ export default {
         outline: none;
         width: 100%;
         box-sizing: border-box;
-        font-size: 13px;
+        font-size: 14px;
 
         &[type=text] {
           padding: 13px;
@@ -203,7 +204,7 @@ export default {
       }
 
       textarea {
-        font-size: 13px;
+        font-size: 14px;
         width: 100%;
         outline: none;
         border: 1px solid #ddd;
