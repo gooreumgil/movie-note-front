@@ -153,7 +153,7 @@ export default {
 
   .container-inner {
 
-    width: 820px;
+    width: 1020px;
     margin: 0 auto;
     text-align: left;
     padding-bottom: 80px;
@@ -164,7 +164,7 @@ export default {
       margin-top: 60px;
 
       h2 {
-        font-size: 18px;
+        font-size: 20px;
         color: #000;
         font-weight: 400;
       }
@@ -190,10 +190,10 @@ export default {
         outline: none;
         width: 100%;
         box-sizing: border-box;
-        font-size: 12px;
+        font-size: 13px;
 
         &[type=text] {
-          padding: 12px;
+          padding: 13px;
         }
 
         &[type=file] {
@@ -203,7 +203,7 @@ export default {
       }
 
       textarea {
-        font-size: 12px;
+        font-size: 13px;
         width: 100%;
         outline: none;
         border: 1px solid #ddd;
@@ -234,7 +234,7 @@ export default {
         color: #000;
         font-weight: 700;
         box-sizing: border-box;
-        padding: 10px;
+        padding: 10px 12px;
         border-radius: 3px;
         font-size: 12px;
       }

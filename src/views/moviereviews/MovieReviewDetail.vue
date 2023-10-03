@@ -193,7 +193,7 @@ export default {
 
   .container-inner {
 
-    width: 820px;
+    width: 1020px;
     margin: 0 auto;
     text-align: left;
     padding-bottom: 80px;
@@ -248,7 +248,7 @@ export default {
 
       .box-statistics {
         p {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 400;
           margin-top: 20px;
           color: #777;
@@ -304,7 +304,7 @@ export default {
 
         button {
           &[type=submit] {
-            margin-top: 2px;
+            margin-top: 5px;
             background-color: #42b983;
             color: #000000;
             font-weight: 700;

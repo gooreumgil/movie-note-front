@@ -281,7 +281,7 @@ export default {
 }
 
 .container-inner {
-  width: 820px;
+  width: 1020px;
   margin: 0 auto;
 }
 
@@ -337,13 +337,13 @@ export default {
       button {
         font-size: 12px;
         display: inline-block;
-        position: absolute;
+        //position: absolute;
         height: 35px;
-
         padding: 10px;
         border-radius: 100px;
         line-height: 0;
         font-weight: 700;
+        margin-left: 10px;
 
         &[type=submit] {
           top: 0;

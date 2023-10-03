@@ -53,7 +53,7 @@
     border-bottom: 1px solid #ddd;
 
     .inner-header {
-      width: 800px;
+      width: 1000px;
       margin: 0 auto;
       position: relative;
     }
