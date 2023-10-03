@@ -1,19 +1,17 @@
 <template>
-  <section class="container-main">
+  <section id="main" class="container-main">
     <Header/>
     <div class="outer-form">
       <form @submit.prevent="setFindMovieReviewPath()">
         <div class="box-input">
           <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">
           <button type="submit">검색</button>
-          <button type="button"><router-link to="/movie-reviews/save">작성하기</router-link></button>
+          <button @click="checkLoginBeforeMovieReviewSave()" type="button">작성하기</button>
         </div>
       </form>
 
     </div>
-
     <div class="container-inner">
-
       <div class="box-welcome" v-if="userNickname">
         <h2><span v-if="userNickname" class="nickname">{{ userNickname}}</span>님, 환영합니다!</h2>
       </div>
@@ -27,13 +25,11 @@
         <button @click="resetPage" type="button">x</button>
       </div>
 
-
       <div class="box-sort-nav">
         <nav @click="selectSort(sort)" v-for="(sort, sortIdx) in sorts" v-bind:key="sortIdx" v-bind:class="{'active': selectedSort === sort.value}">{{ sort.text }}</nav>
       </div>
 
       <ul class="movie-review-wrapper">
-<!--        <div class="divider"></div>-->
         <li class="movie-review-list clearfix" v-for="(movieReview, movieReviewIdx) in movieReviewList" v-bind:key="movieReviewIdx">
           <div class="movie-review-list-inner clearfix">
             <div class="movie-review-item content" v-bind:style="{width: isExistsMovieReviewImg(movieReview) ? '70%' : '100%'}">
@@ -50,13 +46,14 @@
             </div>
 
             <div class="movie-review-item img" v-if="isExistsMovieReviewImg(movieReview)">
-              <div class="box-img">
+              <div @click="goMovieReviewDetail(movieReview.id)" class="box-img">
                 <div class="box-bg" v-bind:style="{backgroundImage: getMovieReviewImgUrl(movieReview)}"></div>
               </div>
             </div>
           </div>
         </li>
       </ul>
+
     </div>
 
   </section>
@@ -68,8 +65,6 @@ import {useStore} from "vuex";
 import {useRoute, useRouter} from "vue-router";
 import {computed} from "vue";
 import movieReviewApi from "@/api/movieReviewApi";
-import helloWorld from "@/components/HelloWorld.vue";
-import commonUtils from "@/utils/commonUtils";
 import mixin from "@/mixin/mixin";
 
 export default {
@@ -99,7 +94,7 @@ export default {
 
       },
       movieReviewPageInfo: {
-        currentPage: 1,
+        currentPage: null,
         last: false,
         size: 9,
         totalElements: 0,
@@ -110,7 +105,8 @@ export default {
       sorts: [
         {value: 'createdDateTime,DESC', text: '최신순'},
         {value: 'createdDateTime,ASC', text: '오래된순'}
-      ]
+      ],
+      scrolledToBottom: false
     }
   },
 
@@ -118,6 +114,10 @@ export default {
     this.searchConditionReset();
     await this.findConditionSetFromQuery();
     await this.getMovieReviews();
+  },
+
+  mounted() {
+    this.scroll();
   },
 
   watch: {
@@ -155,9 +155,9 @@ export default {
 
     },
 
-    async getMovieReviews() {
+    async getMovieReviews(pageVal) {
       const searchWord = this.searchWord;
-      const page = this.movieReviewPageInfo.currentPage;
+      const page = pageVal ? pageVal : this.movieReviewPageInfo.currentPage;
       const size = this.movieReviewPageInfo.size;
       const sort = this.selectedSort;
 
@@ -180,9 +180,16 @@ export default {
         }
 
         const list = data.list;
-        if (list && list.length > 0) {
-          this.movieReviewList = list;
+        if (this.scrolledToBottom) {
+          list.forEach(movieReview => {
+            this.movieReviewList.push(movieReview);
+          })
+        } else {
+          if (list && list.length > 0) {
+            this.movieReviewList = list;
+          }
         }
+
 
         if (searchWord) {
           this.completedSearchWord = searchWord;
@@ -202,8 +209,25 @@ export default {
       await this.router.push(`/movie-reviews/${movieReviewId}`);
     },
 
-    scrollEndEvent() {
-      console.log('들어옴');
+    checkLoginBeforeMovieReviewSave() {
+      const userNickname = this.userNickname;
+      if (!userNickname) {
+        if (confirm("로그인이 필요한 페이지입니다! 로그인 하시겠습니까?")) {
+          this.router.push('/auth/login')
+        }
+      } else {
+        this.router.push('/movie-reviews/save');
+      }
+
+    },
+
+    scroll () {
+      window.onscroll = () => {
+        this.scrolledToBottom = Math.ceil(Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop)) + window.innerHeight === document.documentElement.offsetHeight;
+        if (this.scrolledToBottom && !this.movieReviewPageInfo.last) {
+          this.getMovieReviews(++this.movieReviewPageInfo.currentPage);
+        }
+      }
     },
 
     async findConditionSetFromQuery() {
@@ -214,7 +238,6 @@ export default {
       const sort = query.sort;
 
       this.searchWord = searchWord;
-
       if (page != null && page > -1) {
         this.movieReviewPageInfo.currentPage = page;
       }
@@ -244,21 +267,6 @@ export default {
 
     isExistsMovieReviewImg(movieReview) {
       return movieReview.uploadFileList.length > 0;
-    },
-
-    async reviewDelete(movieReview) {
-      if (!confirm('정말로 삭제 하시겠습니까?')) {
-        return;
-      }
-
-      try {
-        await movieReviewApi.deleteMovieReview(movieReview.id);
-        alert("삭제 되었습니다!");
-        window.location.reload();
-      } catch (err) {
-        console.log(err);
-      }
-
     },
 
   },
@@ -319,7 +327,7 @@ export default {
         box-sizing: border-box;
         padding: 10px;
         outline: none;
-        font-size: 15px;
+        font-size: 13px;
         border-radius: 100px;
         &::placeholder {
           font-size: 13px;
@@ -327,7 +335,7 @@ export default {
       }
 
       button {
-        font-size: 12px;
+        font-size: 11px;
         display: inline-block;
         position: absolute;
         height: 35px;
@@ -339,13 +347,13 @@ export default {
 
         &[type=submit] {
           top: 0;
-          right: -55px;
+          right: -50px;
           background-color: #ffdd42;
           color: #000;
         }
 
         &[type=button] {
-          right: -125px;
+          right: -120px;
           background-color: #51d99b;
         }
       }
@@ -395,7 +403,7 @@ export default {
   margin-top: 10px;
 
   nav {
-    font-size: 13px;
+    font-size: 12px;
     box-sizing: border-box;
     padding: 6px 9px;
     border: 1px solid #ddd;
@@ -417,7 +425,7 @@ export default {
 
 ul {
 
-  margin-top: 45px;
+  margin-top: 20px;
   position: relative;
 
 
@@ -430,9 +438,7 @@ ul {
     .movie-review-list-inner {
       position: relative;
       box-sizing: border-box;
-      //border: 1px solid #ddd;
       border-bottom: 1px solid #ddd;
-      //border-radius: 5px;
       height: 165px;
       overflow: hidden;
 
@@ -443,6 +449,25 @@ ul {
 
         &.content {
           width: 70%;
+
+          a {
+            font-size: 18px;
+            font-weight: 300;
+            color: #000;
+            text-align: left;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            overflow: hidden;
+            display: block;
+            height: 20px;
+            //margin-top: 15px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
         }
 
         &.img {
@@ -455,36 +480,24 @@ ul {
         width: 100px;
         margin: 0 auto;
         margin-right: 0;
+        overflow: hidden;
+        border-radius: 5px;
+        cursor: pointer;
 
         .box-bg {
-          border-radius: 5px;
           width: 100%;
           height: 100%;
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center center;
-        }
-      }
 
-      //&:hover {
-      //  border: 1px solid #42b983;
-      //  transition: all .1s ease-in-out;
-      //}
-
-      a {
-        font-size: 20px;
-        font-weight: 300;
-        color: #000;
-        text-align: left;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        word-wrap: break-word;
-        overflow: hidden;
-        display: block;
-        //margin-top: 15px;
-
-        &:hover {
-          text-decoration: underline;
+          &:hover {
+            transform:scale(1.1);             /*  default */
+            -webkit-transform:scale(1.1);  /*  크롬 */
+            -moz-transform:scale(1.1);     /* FireFox */
+            -o-transform:scale(1.1);        /* Opera */
+            transition: all .3s ease-in-out;
+          }
         }
       }
 
@@ -506,7 +519,7 @@ ul {
         position: absolute;
         bottom: 15px;
         p {
-          font-size: 13px;
+          font-size: 12px;
           color: #777;
           .name {
             font-weight: 400;

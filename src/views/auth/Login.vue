@@ -38,8 +38,8 @@ export default {
   },
   data() {
     return {
-      email: "sonaky47@naver.com",
-      password: "aormfl132",
+      email: null,
+      password: null,
     }
   },
   methods: {

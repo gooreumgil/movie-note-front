@@ -8,7 +8,7 @@
           <h2 class="title">{{ movieReview.title }}</h2>
           <p class="nickname">by {{ movieReview.member.nickname }}</p>
           <div class="review-info">
-            <p class="created-date">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월 DD일 h:m') }}</p>
+            <p class="created-date">{{ dateTimeTo(movieReview.createdDateTime, 'yyyy년 MM월DD일 h:m') }}</p>
           </div>
         </div>
         <div class="box-content">
@@ -29,7 +29,7 @@
         <ul class="wrapper-reply">
           <li class="list-reply" v-for="(reply, replyIdx) in movieReviewReplyList" v-bind:key="replyIdx">
             <p class="reply-writer">{{ reply.member.nickname }}</p>
-            <p class="reply-datetime">{{ dateTimeTo(reply.createdDateTime, 'yyyy년 MM월 DD일 h:mm') }}</p>
+            <p class="reply-datetime">{{ dateTimeTo(reply.createdDateTime, 'yyyy년 MM월DD일 h:mm') }}</p>
             <p class="reply-content">{{ reply.content }}</p>
           </li>
         </ul>
@@ -206,14 +206,14 @@ export default {
         margin-top: 40px;
 
         h2 {
-          font-size: 24px;
+          font-size: 20px;
           font-weight: 300;
           color: #000;
         }
 
         p {
           margin-top: 10px;
-          font-size: 14px;
+          font-size: 12px;
           color: #a0a0a0;
         }
 
@@ -224,6 +224,7 @@ export default {
         .review-info {
           font-size: 12px;
           .created-date {
+            margin-top: 8px;
           }
         }
       }
@@ -238,6 +239,7 @@ export default {
         margin-top: 40px;
 
         pre {
+          font-size: 13px;
           text-wrap: inherit;
           line-height: 1.4;
           margin-top: 20px;
@@ -246,9 +248,10 @@ export default {
 
       .box-statistics {
         p {
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 400;
           margin-top: 20px;
+          color: #777;
         }
       }
     }

@@ -9,7 +9,8 @@
 
       <form @submit.prevent="saveMovieReview">
 
-        <div v-if="uploadImageFileResult" class="upload-image-preview" v-bind:style="{backgroundImage: 'url(' + uploadImageFileResult + ')'}"></div>
+<!--        <div v-if="uploadImageFileResult" class="upload-image-preview" v-bind:style="{backgroundImage: 'url(' + uploadImageFileResult + ')'}"></div>-->
+        <img v-if="uploadImageFileResult" class="upload-image-preview" v-bind:src="uploadImageFileResult" alt="">
 
         <div class="box-review-title">
           <input v-model="reviewTitle" type="text" placeholder="제목을 입력하세요.">
@@ -163,7 +164,7 @@ export default {
       margin-top: 60px;
 
       h2 {
-        font-size: 20px;
+        font-size: 18px;
         color: #000;
         font-weight: 400;
       }
@@ -174,8 +175,9 @@ export default {
       padding: 10px;
 
       .upload-image-preview {
-        width: 150px;
-        height: 150px;
+        //width: 150px;
+        //height: 150px;
+        max-width: 100%;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -185,11 +187,13 @@ export default {
       }
 
       input {
+        outline: none;
         width: 100%;
         box-sizing: border-box;
+        font-size: 12px;
 
         &[type=text] {
-          padding: 15px;
+          padding: 12px;
         }
 
         &[type=file] {
@@ -199,12 +203,13 @@ export default {
       }
 
       textarea {
+        font-size: 12px;
         width: 100%;
         outline: none;
         border: 1px solid #ddd;
         margin-top: 10px;
         box-sizing: border-box;
-        padding: 15px;
+        padding: 12px;
       }
 
       .box-review-title {
@@ -231,7 +236,7 @@ export default {
         box-sizing: border-box;
         padding: 10px;
         border-radius: 3px;
-        font-size: 13px;
+        font-size: 12px;
       }
     }
 
