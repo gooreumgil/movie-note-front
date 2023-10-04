@@ -104,7 +104,9 @@ export default {
       selectedSort: 'createdDateTime,DESC',
       sorts: [
         {value: 'createdDateTime,DESC', text: '최신순'},
-        {value: 'createdDateTime,ASC', text: '오래된순'}
+        {value: 'createdDateTime,ASC', text: '오래된순'},
+        {value: 'statistics.likeTotal,DESC', text: '좋아요순'},
+        {value: 'statistics.replyTotal,DESC', text: '리뷰많은순'}
       ],
       scrolledToBottom: false
     }

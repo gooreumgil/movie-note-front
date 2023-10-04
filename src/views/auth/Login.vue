@@ -69,7 +69,7 @@ export default {
         }
         await this.router.push("/")
       } catch (err) {
-        console.log(err);
+        alert(err.response.data.message);
       }
     },
   }

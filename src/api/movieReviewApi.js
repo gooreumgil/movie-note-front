@@ -50,4 +50,15 @@ export default {
         return apiClient.delete(url);
     },
 
+    movieReviewLike(id) {
+        const url = `/api/v1/movie-reviews/${id}/likes`;
+        return apiClient.post(url);
+    },
+
+    movieReviewLikeCancel(id, likeId) {
+        const url = `/api/v1/movie-reviews/${id}/likes/${likeId}`;
+        return apiClient.delete(url);
+    },
+
+
 }

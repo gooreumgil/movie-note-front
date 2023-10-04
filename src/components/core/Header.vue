@@ -6,6 +6,7 @@
       </nav>
       <nav class="login" v-if="!email"><router-link to="/auth/login">로그인</router-link></nav>
       <nav class="logout" v-else>
+        <span>{{ nickname }}</span>
         <button type="button" @click="logout">로그아웃</button>
       </nav>
     </div>
@@ -27,7 +28,8 @@
       const router = useRouter();
       const store = useStore();
       const email = computed(() => store.getters.getEmail);
-      return {email, cookies, router, store};
+      const nickname = computed(() => store.getters.getNickname);
+      return {email, nickname, cookies, router, store};
     },
     methods: {
       logout() {

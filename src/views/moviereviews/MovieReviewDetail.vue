@@ -12,18 +12,29 @@
           </div>
         </div>
         <div class="box-content">
+
           <div class="box-image" v-if="isExistsMovieReviewImg(movieReview)">
             <img v-bind:src="getMovieReviewImg(movieReview)" alt="">
           </div>
+
           <div class="box-text">
             <pre>{{ movieReview.content }}</pre>
           </div>
+
+          <div class="box-like">
+            <span @click="changeMovieReviewLike(movieReview)" v-if="movieReview.isLike" class="material-symbols-outlined icon" style="color: #ff4141">favorite</span>
+            <span @click="changeMovieReviewLike(movieReview)" v-else class="material-symbols-outlined icon" style="font-variation-settings: 'FILL' 0">favorite</span>
+            <span class="text">좋아요</span>
+          </div>
+
           <div class="box-statistics">
             <p>댓글 {{ movieReview.statistics.replyTotal }} 좋아요 {{ movieReview.statistics.likeTotal }}</p>
           </div>
 
         </div>
       </div>
+
+
 
       <div class="box-reply">
         <ul class="wrapper-reply">
@@ -162,6 +173,31 @@ export default {
 
     },
 
+    async changeMovieReviewLike(movieReview) {
+
+      const id = movieReview.id;
+      const like = movieReview.isLike;
+      const likeId = movieReview.likeId;
+
+      if (!like) {
+        try {
+          const { data } = await movieReviewApi.movieReviewLike(id);
+          console.log(data);
+          movieReview.isLike = true;
+          movieReview.likeId = data.id;
+          await this.getMovieReviewStatistics(id);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        await movieReviewApi.movieReviewLikeCancel(id, likeId);
+        movieReview.isLike = false;
+        movieReview.likeId = null;
+        await this.getMovieReviewStatistics(id);
+      }
+
+    },
+
     getMovieReviewImg(movieReview) {
       return movieReview.uploadFileList[0].url;
     },
@@ -181,6 +217,14 @@ export default {
 <style scoped lang="scss">
 
 .container-main {
+
+  .material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+  }
 
 
   .box-review-img {
@@ -245,6 +289,28 @@ export default {
           line-height: 1.4;
           margin-top: 20px;
         }
+
+        .box-like {
+          display: flex;
+          align-items: center;
+          margin-top: 20px;
+
+          span {
+
+            &.icon {
+              font-size: 20px;
+              cursor: pointer;
+            }
+
+            &.text {
+              font-size: 14px;
+              margin-left: 3px;
+              transform: translateY(-1px);
+            }
+
+          }
+        }
+
       }
 
       .box-statistics {
