@@ -1,16 +1,17 @@
 <template>
   <section id="main" class="container-main">
-    <Header/>
-    <div class="outer-form">
-      <form @submit.prevent="setFindMovieReviewPath()">
-        <div class="box-input">
-          <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">
-          <button type="submit">검색</button>
-          <button @click="checkLoginBeforeMovieReviewSave()" type="button">작성하기</button>
-        </div>
-      </form>
+    <Header @setFindMovieReviewPath="setFindMovieReviewPath"
+            @changeSearchWord="changeSearchWord" :search-word="searchWord"/>
+<!--    <div class="outer-form">-->
+<!--      <form @submit.prevent="setFindMovieReviewPath()">-->
+<!--        <div class="box-input">-->
+<!--          <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">-->
+<!--          <button type="submit">검색</button>-->
+<!--          <button @click="checkLoginBeforeMovieReviewSave()" type="button">작성하기</button>-->
+<!--        </div>-->
+<!--      </form>-->
 
-    </div>
+<!--    </div>-->
     <div class="container-inner">
       <div class="box-welcome" v-if="userNickname">
         <h2><span v-if="userNickname" class="nickname">{{ userNickname}}</span>님, 환영합니다!</h2>
@@ -223,6 +224,10 @@ export default {
 
     },
 
+    changeSearchWord(searchWord) {
+      this.searchWord = searchWord;
+    },
+
     scroll () {
       window.onscroll = () => {
         this.scrolledToBottom = Math.ceil(Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop)) + window.innerHeight === document.documentElement.offsetHeight;
@@ -313,10 +318,10 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   position: absolute;
-  top: 15px;
+  top: 19px;
   left: 50%;
   /* left: 0; */
-  transform: translateX(-50%);
+  transform: translateX(-100%);
 
   form {
     .box-input {

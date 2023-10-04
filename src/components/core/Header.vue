@@ -9,6 +9,16 @@
 <!--        <span>{{ nickname }}</span>-->
         <button type="button" @click="logout">로그아웃</button>
       </nav>
+      <div class="outer-form">
+        <form @submit.prevent="setFindMovieReviewPath()">
+          <div class="box-input">
+            <input ref="searchWord" @change="changeSearchWord" :value="searchWord" type="text" placeholder="검색어를 입력하세요">
+            <button type="submit">검색</button>
+            <button @click="checkLoginBeforeMovieReviewSave()" type="button">작성하기</button>
+          </div>
+        </form>
+
+      </div>
     </div>
 
   </header>
@@ -18,7 +28,7 @@
   import {computed} from "vue";
   import store from "@/store";
   import {useCookies} from "vue3-cookies";
-  import {useRouter} from "vue-router";
+  import {useRoute, useRouter} from "vue-router";
   import {useStore} from "vuex";
 
   export default {
@@ -26,10 +36,16 @@
     setup() {
       const cookies = useCookies().cookies;
       const router = useRouter();
+      const route = useRoute();
       const store = useStore();
       const email = computed(() => store.getters.getEmail);
       const nickname = computed(() => store.getters.getNickname);
-      return {email, nickname, cookies, router, store};
+      return {email, nickname, cookies, router, route, store};
+    },
+    props: {
+      searchWord: {
+        default: null
+      }
     },
     methods: {
       logout() {
@@ -38,6 +54,31 @@
         this.store.state.userInfo.nickname = null;
         this.store.state.userInfo.email = null;
         this.store.state.userInfo.imageUrl = null;
+      },
+
+      setFindMovieReviewPath() {
+        const path = this.route.path;
+        if (path === '/') {
+          this.$emit('setFindMovieReviewPath');
+        } else {
+          this.router.push(`/?searchWord=${this.$refs.searchWord.value}`);
+        }
+      },
+
+      changeSearchWord(e) {
+        this.$emit('changeSearchWord', e.target.value)
+      },
+
+      checkLoginBeforeMovieReviewSave() {
+        const nickname = this.nickname;
+        if (!nickname) {
+          if (confirm("로그인이 필요한 페이지입니다! 로그인 하시겠습니까?")) {
+            this.router.push('/auth/login')
+          }
+        } else {
+          this.router.push('/movie-reviews/save');
+        }
+
       },
     }
   }
@@ -58,6 +99,69 @@
       width: 1000px;
       margin: 0 auto;
       position: relative;
+      display: flex;
+      align-items: center;
+
+      .outer-form {
+        text-align: left;
+        margin-left: 10px;
+        /* margin-top: 20px; */
+        box-sizing: border-box;
+        padding-left: 10px;
+        padding-right: 10px;
+        //position: absolute;
+        //top: 19px;
+        //left: 50%;
+        /* left: 0; */
+        //transform: translateX(-100%);
+
+        form {
+          .box-input {
+
+            position: relative;
+            width: fit-content;
+            height: 35px;
+
+            input {
+              height: 100%;
+              box-sizing: border-box;
+              padding: 10px;
+              outline: none;
+              font-size: 13px;
+              border-radius: 100px;
+              &::placeholder {
+                font-size: 13px;
+              }
+            }
+
+            button {
+              font-size: 12px;
+              display: inline-block;
+              //position: absolute;
+              height: 35px;
+              padding: 10px;
+              border-radius: 100px;
+              line-height: 0;
+              font-weight: 700;
+              margin-left: 10px;
+
+              &[type=submit] {
+                top: 0;
+                right: -55px;
+                background-color: #ffdd42;
+                color: #000;
+              }
+
+              &[type=button] {
+                right: -125px;
+                background-color: #51d99b;
+              }
+            }
+          }
+        }
+
+      }
+
     }
 
     nav {
@@ -79,13 +183,20 @@
         top: 50%;
         transform: translateY(-50%);
         font-weight: 400;
+
       }
 
       &.logout {
 
         span {
+          font-size: 13px;
           color: #333;
           font-weight: 700;
+
+          display: inline-block;
+          border-radius: 100px;
+          //padding: 5px 7px;
+          //background-color: #65e1eb;
         }
 
         button[type=button] {
