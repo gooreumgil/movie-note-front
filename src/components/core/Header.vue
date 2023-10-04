@@ -178,6 +178,7 @@
       }
 
       &.login, &.logout {
+        font-size: 13px;
         position: absolute;
         right: 0;
         top: 50%;
