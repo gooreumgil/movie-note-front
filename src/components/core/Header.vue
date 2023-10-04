@@ -6,7 +6,7 @@
       </nav>
       <nav class="login" v-if="!email"><router-link to="/auth/login">로그인</router-link></nav>
       <nav class="logout" v-else>
-        <span>{{ nickname }}</span>
+<!--        <span>{{ nickname }}</span>-->
         <button type="button" @click="logout">로그아웃</button>
       </nav>
     </div>
@@ -81,14 +81,24 @@
         font-weight: 400;
       }
 
-      button[type=button] {
-        cursor: pointer;
-        background-color: transparent;
-        box-sizing: border-box;
-        font-weight: 400;
-        color: #333;
-        font-size: 13px;
+      &.logout {
+
+        span {
+          color: #333;
+          font-weight: 700;
+        }
+
+        button[type=button] {
+          cursor: pointer;
+          background-color: transparent;
+          box-sizing: border-box;
+          font-weight: 400;
+          color: #333;
+          font-size: 13px;
+        }
       }
+
+
 
     }
   }
