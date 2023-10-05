@@ -2,16 +2,6 @@
   <section id="main" class="container-main">
     <Header @setFindMovieReviewPath="setFindMovieReviewPath"
             @changeSearchWord="changeSearchWord" :search-word="searchWord"/>
-<!--    <div class="outer-form">-->
-<!--      <form @submit.prevent="setFindMovieReviewPath()">-->
-<!--        <div class="box-input">-->
-<!--          <input v-model="searchWord" type="text" placeholder="검색어를 입력하세요">-->
-<!--          <button type="submit">검색</button>-->
-<!--          <button @click="checkLoginBeforeMovieReviewSave()" type="button">작성하기</button>-->
-<!--        </div>-->
-<!--      </form>-->
-
-<!--    </div>-->
     <div class="container-inner">
       <div class="box-welcome" v-if="userNickname">
         <h2><span v-if="userNickname" class="nickname">{{ userNickname}}</span>님, 환영합니다!</h2>
@@ -114,6 +104,7 @@ export default {
   },
 
   async created() {
+    this.store.commit('SET_CURRENT_NAV', 'MOVIE_REVIEW');
     this.searchConditionReset();
     await this.findConditionSetFromQuery();
     await this.getMovieReviews();
@@ -158,7 +149,7 @@ export default {
 
     },
 
-    async getMovieReviews(pageVal) {
+    async getMovieReviews(pageVal, scrollToBottom) {
       const searchWord = this.searchWord;
       const page = pageVal ? pageVal : this.movieReviewPageInfo.currentPage;
       const size = this.movieReviewPageInfo.size;
@@ -183,7 +174,7 @@ export default {
         }
 
         const list = data.list;
-        if (this.scrolledToBottom) {
+        if (scrollToBottom) {
           list.forEach(movieReview => {
             this.movieReviewList.push(movieReview);
           })
@@ -232,7 +223,7 @@ export default {
       window.onscroll = () => {
         this.scrolledToBottom = Math.ceil(Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop)) + window.innerHeight === document.documentElement.offsetHeight;
         if (this.scrolledToBottom && !this.movieReviewPageInfo.last) {
-          this.getMovieReviews(++this.movieReviewPageInfo.currentPage);
+          this.getMovieReviews(++this.movieReviewPageInfo.currentPage, true);
         }
       }
     },

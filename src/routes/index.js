@@ -8,6 +8,7 @@ import SignUp from "@/views/auth/SignUp.vue";
 import movieReviewDetail from "@/views/moviereviews/MovieReviewDetail.vue";
 import MovieReviewEdit from "@/views/moviereviews/MovieReviewEdit.vue";
 import MovieReviewSave from "@/views/moviereviews/MovieReviewSave.vue";
+import MyPage from "@/views/mypage/MyPage.vue";
 
 const {cookies} = useCookies();
 
@@ -168,6 +169,11 @@ export const router = createRouter({
         {
             path: "/movie-reviews/:id/edit",
             component: MovieReviewEdit,
+            beforeEnter: redirectLoginPageIfTokenNotValid
+        },
+        {
+            path: "/my-page",
+            component: MyPage,
             beforeEnter: redirectLoginPageIfTokenNotValid
         }
     ]

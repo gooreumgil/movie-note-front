@@ -7,7 +7,8 @@ const store = createStore({
             email: null,
             nickname: null,
             imageUrl: null
-        }
+        },
+        currentNav: null
     },
     getters: {
         getEmail(state) {
@@ -18,6 +19,9 @@ const store = createStore({
         },
         getImageUrl(state) {
             return state.userInfo.imageUrl
+        },
+        getCurrentNav(state) {
+            return state.currentNav;
         },
     },
     mutations

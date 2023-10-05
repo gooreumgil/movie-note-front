@@ -9,5 +9,8 @@ export default {
 
     SET_USER_IMAGE_URL(state, imageUrl) {
         state.userInfo.imageUrl = imageUrl;
-    }
+    },
+    SET_CURRENT_NAV(state, currentNav) {
+        state.currentNav = currentNav;
+    },
 }

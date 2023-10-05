@@ -6,8 +6,13 @@
       </nav>
       <nav class="login" v-if="!email"><router-link to="/auth/login">로그인</router-link></nav>
       <nav class="logout" v-else>
-<!--        <span>{{ nickname }}</span>-->
-        <button type="button" @click="logout">로그아웃</button>
+        <router-link v-bind:style="{fontWeight: getFontWeightByCurrentNav('MOVIE_REVIEW')}" to="/">영화리뷰</router-link>
+        <router-link v-bind:style="{fontWeight: getFontWeightByCurrentNav('MY_PAGE')}" to="/my-page">마이페이지</router-link>
+        <button type="button" @click="logout">
+          로그아웃
+<!--          <span class="material-symbols-outlined icon">logout</span>-->
+<!--          로그아웃-->
+        </button>
       </nav>
       <div class="outer-form">
         <form @submit.prevent="setFindMovieReviewPath()">
@@ -40,7 +45,8 @@
       const store = useStore();
       const email = computed(() => store.getters.getEmail);
       const nickname = computed(() => store.getters.getNickname);
-      return {email, nickname, cookies, router, route, store};
+      const currentNav = computed(() => store.getters.getCurrentNav).value;
+      return {email, nickname, currentNav, cookies, router, route, store};
     },
     props: {
       searchWord: {
@@ -79,6 +85,12 @@
           this.router.push('/movie-reviews/save');
         }
 
+      },
+
+      getFontWeightByCurrentNav(currentNav) {
+        console.log(this.currentNav);
+        console.log(currentNav);
+        return this.currentNav === currentNav ? 700 : 400;
       },
     }
   }
@@ -184,20 +196,28 @@
         top: 50%;
         transform: translateY(-50%);
         font-weight: 400;
+        display: flex;
+        align-items: center;
 
       }
 
       &.logout {
 
-        span {
+        a {
           font-size: 13px;
           color: #333;
-          font-weight: 700;
+          font-weight: 400;
 
           display: inline-block;
           border-radius: 100px;
+          margin-right: 15px;
           //padding: 5px 7px;
           //background-color: #65e1eb;
+
+          &:hover {
+            font-weight: 700 !important;
+            transition: all .1s ease-in-out;
+          }
         }
 
         button[type=button] {
@@ -207,6 +227,18 @@
           font-weight: 400;
           color: #333;
           font-size: 13px;
+          display: flex;
+          align-items: center;
+          padding: 0;
+
+          &:hover {
+            font-weight: 700;
+            transition: all .1s ease-in-out;
+          }
+
+          span {
+            font-size: 15px;
+          }
         }
       }
 
