@@ -28,10 +28,10 @@
 
     data() {
       return {
-        email: 'hunter407@naver.com',
-        name: '김덕배',
-        nickname: '나라의경제',
-        password: 'aormfl123'
+        email: null,
+        name: null,
+        nickname: null,
+        password: null
       }
     },
     methods: {
