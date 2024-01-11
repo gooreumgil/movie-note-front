@@ -1,5 +1,5 @@
 export default  {
     api: {
-        baseUrl: 'https://dev-movie-note-api.old-team.net'
+        baseUrl: 'https://movie-note-api.keyworddiary.com'
     }
 }
